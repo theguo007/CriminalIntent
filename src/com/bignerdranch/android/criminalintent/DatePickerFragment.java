@@ -18,8 +18,11 @@ import android.widget.DatePicker.OnDateChangedListener;
 public class DatePickerFragment extends DialogFragment {
 	public static final String EXTRA_DATE =
 	        "com.bignerdranch.android.criminalintent.date";
-
+	private int hour;
+	private int minute;
+	private int second;
 	private Date mDate;
+	private Calendar calendar;
 
 	public static DatePickerFragment newInstance(Date date) {
 		Bundle args = new Bundle();
@@ -33,7 +36,10 @@ public class DatePickerFragment extends DialogFragment {
 	private void sendResult(int resultCode) {
 	    if (getTargetFragment() == null)
 	        return;
-
+	    calendar.setTime(mDate);
+	    mDate = new GregorianCalendar(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), hour, minute, second)
+	    	.getTime();
+	    
 	    Intent i = new Intent();
 	    i.putExtra(EXTRA_DATE, mDate);
 
@@ -44,11 +50,14 @@ public class DatePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 		mDate = (Date)getArguments().getSerializable(EXTRA_DATE);
 	    // Create a Calendar to get the year, month, and day
-	    Calendar calendar = Calendar.getInstance();
+	    calendar = Calendar.getInstance();
 	    calendar.setTime(mDate);
 	    int year = calendar.get(Calendar.YEAR);
 	    int month = calendar.get(Calendar.MONTH);
 	    int day = calendar.get(Calendar.DAY_OF_MONTH);
+	    hour = calendar.get(Calendar.HOUR_OF_DAY);
+	    minute = calendar.get(Calendar.MINUTE);
+	    second = calendar.get(Calendar.SECOND);
 	    
 		View v = getActivity().getLayoutInflater()
 		        .inflate(R.layout.dialog_date, null);
